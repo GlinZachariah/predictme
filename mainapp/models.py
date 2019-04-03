@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class TSLA(models.Model):
-    price_date= models.DateTimeField('date')
+    price_date= models.DateField('date')
     open_price = models.FloatField(default=0.0)
     high_price = models.FloatField(default=0.0)
     low_price = models.FloatField(default=0.0)
@@ -11,7 +11,7 @@ class TSLA(models.Model):
     volume = models.FloatField(default=0.0)
 
 class INTC(models.Model):
-    price_date= models.DateTimeField('date')
+    price_date= models.DateField('date')
     open_price = models.FloatField(default=0.0)
     high_price = models.FloatField(default=0.0)
     low_price = models.FloatField(default=0.0)
@@ -20,7 +20,7 @@ class INTC(models.Model):
     volume = models.FloatField(default=0.0)
 
 class NVDA(models.Model):
-    price_date= models.DateTimeField('date')
+    price_date= models.DateField('date')
     open_price = models.FloatField(default=0.0)
     high_price = models.FloatField(default=0.0)
     low_price = models.FloatField(default=0.0)
@@ -29,7 +29,7 @@ class NVDA(models.Model):
     volume = models.FloatField(default=0.0)
 
 class QCOM(models.Model):
-    price_date= models.DateTimeField('date')
+    price_date= models.DateField('date')
     open_price = models.FloatField(default=0.0)
     high_price = models.FloatField(default=0.0)
     low_price = models.FloatField(default=0.0)
@@ -38,7 +38,7 @@ class QCOM(models.Model):
     volume = models.FloatField(default=0.0)
 
 class MSFT(models.Model):
-    price_date= models.DateTimeField('date')
+    price_date= models.DateField('date')
     open_price = models.FloatField(default=0.0)
     high_price = models.FloatField(default=0.0)
     low_price = models.FloatField(default=0.0)
@@ -47,7 +47,7 @@ class MSFT(models.Model):
     volume = models.FloatField(default=0.0)
 
 class IXIC(models.Model):
-    price_date= models.DateTimeField('date')
+    price_date= models.DateField('date')
     open_price = models.FloatField(default=0.0)
     high_price = models.FloatField(default=0.0)
     low_price = models.FloatField(default=0.0)
