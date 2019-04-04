@@ -1,26 +1,23 @@
+.main{
+  padding-top: 40px;
+}
 .search-box
 {
-    position: absolute;
-    top: 50%;
+    /* top:50px;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%); */
     background-color: #2f3640;
-    height: 40px;
     border-radius: 40px;
-    padding: 10px;
+    height: 40px;
+    margin:auto;
 }
-.search-box:hover > .search-txt
-{
-    width: 240px;
-    padding: 0 6px;
+.search-btn:hover{
+  color: white;
 }
-.search-box:hover > .search-btn
-{
-   background: white;
-}
+
 .search-btn
 {
-    color: #e84118;
+    color: #186be8;
     float: right;
     width: 40px;
     height: 40px;
@@ -36,11 +33,23 @@
     background: none;
     outline: none;
     float: left;
-    padding: 0;
     color: white;
     font-size: 16px;
     transition: 0.4s;
-    line-height: 40px;
-    width: 0px;
+    padding: 15px;
+    padding-top: 10px;
+    padding-left: 26px;
+}
 
+html, body{
+    height: 100%;
+    background-color:#5691e9;
+
+}
+
+.line{
+  background-color: #2f3640;
+  border-radius: 40px;
+  height: 5px; 
+  margin-top: 40px;
 }
