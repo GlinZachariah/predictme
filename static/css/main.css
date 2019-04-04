@@ -43,7 +43,7 @@
 
 html, body{
     height: 100%;
-    background-color:#5691e9;
+
 
 }
 
@@ -53,3 +53,21 @@ html, body{
   height: 5px; 
   margin-top: 40px;
 }
+
+
+.visual{
+    margin-top: 40px;
+}
+.graph_title{
+    width: 850px;
+    margin-right: auto;
+    margin-left: auto;
+    display: block;
+}
+iframe {
+    width: 900px;
+    margin-right: auto;
+    margin-left: auto;
+    display: block;
+}
+

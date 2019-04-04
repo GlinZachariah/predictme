@@ -9,3 +9,10 @@ def graph(symbol,df):
     df = df.sort_values('price_date')
     data = [go.Scatter(x=df.price_date, y=df['close_price'])]
     py.iplot(data, filename = 'basic-graph.html')
+
+def find_price(symbol,df):
+	len =df.shape[0]
+	close = df['close_price'].values;
+	last_price = close[len-1]
+	secondlast_price = close[len-2]
+	return secondlast_price,last_price

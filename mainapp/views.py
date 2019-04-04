@@ -6,7 +6,7 @@ from django.template import loader
 from .models import TSLA
 import sqlite3
 import pandas as pd 
-from modules.make_graph import graph
+from modules.make_graph import graph,find_price
 
 
 def index(request):
@@ -21,8 +21,13 @@ def base(request,symbol):
     cnx = sqlite3.connect('db.sqlite3')
     df = pd.read_sql_query("SELECT * FROM mainapp_"+symbol.lower(), cnx)
     graph(symbol,df)
+    secondlast_price,last_price =find_price(symbol,df)
+    change = secondlast_price -last_price
+    last_price ="{0:.2f}".format(last_price)
     context = {
-        'test_message' : 'working',
+        'symbol' : symbol,
         'temp':df,
+        'change': change,
+        'last_price': last_price,
     }
     return HttpResponse(template.render(context, request))

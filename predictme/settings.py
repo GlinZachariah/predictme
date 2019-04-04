@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django_plotly_dash.apps.DjangoPlotlyDashConfig',
     'mainapp.apps.MainappConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -126,9 +125,3 @@ STATICFILES_DIRS = [
     '/static/',
 ]
 
-STATICFILES_FINDERS = [
-'django.contrib.staticfiles.finders.FileSystemFinder',
-'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-'django_plotly_dash.finders.DashAssetFinder',
-'django_plotly_dash.finders.DashComponentFinder',
-]
