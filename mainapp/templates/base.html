@@ -4,14 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-<script
-  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-  integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
-  crossorigin="anonymous"></script>
 {% load static %}
+<link rel="stylesheet" href="{% static "css/font-awesome.min.css"%}">
+<link rel="stylesheet" href="{% static "css/all.css"%}">
 <link rel="stylesheet" href="{% static "css/main.css"%}">
+<script src="{% static "js/jquery-3.3.1.slim.min.js" %}"></script>
 <script src="{% static "js/main.js" %}"></script>
 
 <body>
@@ -25,7 +22,9 @@
   </form>
 </div>
 <div class="line"></div>
-{{temp}}
+<div class= "visual">
+	<iframe width="900" height="800" frameborder="0" scrolling="no" src="//plot.ly/~glinzac/12.embed"></iframe>
+</div>
 <footer></footer>
 </body>
 </html>
