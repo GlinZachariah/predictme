@@ -56,18 +56,41 @@ html, body{
 
 
 .visual{
-    margin-top: 40px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-width:5px;
+    border-style:solid;
+    border-color:#2eb9ce;
+    border-radius:10px;
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
+    width: 1201px;
+    margin-right: auto;
+    margin-left: auto;
+    display: block;
+
 }
 .graph_title{
-    width: 850px;
+    width: 1150px;
     margin-right: auto;
     margin-left: auto;
     display: block;
 }
 iframe {
-    width: 900px;
+    width: 1200px;
     margin-right: auto;
     margin-left: auto;
     display: block;
 }
-
+.menu{
+    display: inline-block;
+    position: relative;
+    left: 25%;
+}
+.menu_btn{
+    float: left;
+    display: block;
+    padding: 10px 40px;
+    display: block;
+    float: left;
+}

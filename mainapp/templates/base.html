@@ -22,12 +22,31 @@
   </form>
 </div>
 <div class="line"></div>
+<div class="doc">
+<div class="menu">
+	<ul>
+		<a href="/SYMBOL/{{symbol}}"><li class="menu_btn" id="c1">Home</li></a>
+		<a href="/SYMBOL/{{symbol}}/Predict"><li class="menu_btn" id="c2">Predict</li></a>
+		<a href="/SYMBOL/{{symbol}}/Twitter"><li class="menu_btn" id="c3">Twitter</li></a>
+		<a href="/SYMBOL/{{symbol}}/News"><li class="menu_btn" id="c4">News</li></a>
+		<a href="/SYMBOL/{{symbol}}/Others"><li class="menu_btn" id="c5">Other Indicators</li></a>
+	</ul>
+</div>
 <div class= "visual">
 	<div class="graph_title">
-		<div id="sym_title" style="font-size: 32px">{{symbol}}</div> <div><span><b style="font-size: 24px">{{last_price}}</b><span style="font-size: 18px">({{change}})</></div>
+		<div id="sym_title" style="font-size: 32px">NASDAQ:{{symbol}}</div><br> <div><span><b style="font-size: 28px">{{last_price}} USD </b>
+			{% if change > 0 %}
+				<span style="font-size: 18px; color:green">{{change}} ({{per}}%)</span>
+			{% else %}
+				<span style="font-size: 18px; color:red">{{change}} ({{per}}%)</span>
+			{% endif %}
+			
+			</div> <div>Closed: {{close_date}}</div>
 	</div>
 	<iframe width="900" height="600" frameborder="0" scrolling="no" src="//plot.ly/~glinzac/12.embed"></iframe>
 </div>
+</div>
+
 <footer></footer>
 </body>
 </html>
