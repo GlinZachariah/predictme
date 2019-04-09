@@ -53,7 +53,7 @@ def graph(symbol,df):
 		                     step='month',
 		                     stepmode='backward'),
 		                dict(count=6,
-		                     label=' 6 month ',
+		                     label=' 6 months ',
 		                     step='month',
 		                     stepmode='backward'),
 		                dict(count=1,
