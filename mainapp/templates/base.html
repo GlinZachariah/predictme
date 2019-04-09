@@ -22,7 +22,46 @@
 			
 			</div> <div>Closed: {{close_date}}</div>
 	</div>
-	<iframe width="900" height="600" frameborder="0" scrolling="no" src="//plot.ly/~glinzac/12.embed"></iframe>
+
+	<div id="graph"></div>
+
+	<script>
+
+  var temp =window.localStorage.newdat;
+  var temp1 =temp.split(',');
+  var trace = {
+  x: temp1,
+  close: {{close}},
+  high: {{high}},
+  low: {{low}},
+  open: {{open}},
+
+  // cutomise colors
+  increasing: {line: {color: 'green'}},
+  decreasing: {line: {color: 'red'}},
+
+  type: 'candlestick',
+  xaxis: 'x',
+  yaxis: 'y'
+};
+
+var data = [trace];
+
+var layout = {
+  dragmode: 'zoom',
+  showlegend: false,
+  xaxis: {
+    rangeslider: {
+		 visible: false
+	 }
+  }
+};
+
+Plotly.plot('graph', data, layout);
+
+	</script>
 </div>
 </div>
+
+
 {% endblock %}

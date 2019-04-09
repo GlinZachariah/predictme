@@ -12,9 +12,46 @@ sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossor
   integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
   crossorigin="anonymous"></script>
 {% load static %}
+
 <link rel="stylesheet" href="{% static "css/main.css"%}">
 <script src="{% static "js/main.js" %}"></script>
+<script src="{% static "js/plotly-latest.min.js" %}"></script>
+<script src="{% static "/data.json" %}"></script>
+<script>
+var main_dat=[];
 
+ function loadJSON(callback) {
+    var xobj = new XMLHttpRequest();
+    xobj.overrideMimeType("application/json");
+    xobj.open('GET','{% static   'data.json' %}', true);
+    xobj.onreadystatechange = function() {
+        if (xobj.readyState == 4 && xobj.status == "200") {
+            // .open will NOT return a value but simply returns undefined in async mode so use a callback
+            callback(xobj.responseText);
+        }
+    }
+    xobj.send(null);
+
+}
+
+// Call to function with anonymous callback
+loadJSON(function(response) {
+    // Do Something with the response e.g.
+    jsonresponse = JSON.parse(response);
+    // Assuming json data is wrapped in square brackets as Drew suggests
+    dat =JSON.parse(jsonresponse);
+    var count = Object.keys(dat).length;
+    for (i = 0; i < count; i++) {
+      main_dat.push(dat[i].toString());
+    }
+
+    window.localStorage.newdat = main_dat;
+    window.localStorage.ndat = dat;
+});
+
+
+
+</script>
 <body>
 <header></header>
 <div class="main">
@@ -31,5 +68,7 @@ sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossor
     {% endblock %}
 </main>
 <footer></footer>
+<script>
+</script>
 </body>
 </html>
