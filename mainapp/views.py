@@ -22,6 +22,16 @@ def update(request,symbol):
     upd(symbol)
     return base(request,symbol)
 
+def analyse(request,symbol,analysis_type='default',period=30):
+    if analyse == 'default':
+        indicator_name = 'SMA'
+        interval =''
+    template = loader.get_template('analyse.html')
+    context = {
+        'test_message' : 'working',
+    }
+    return HttpResponse(template.render(context, request))
+
 
 
 def base(request,symbol):
