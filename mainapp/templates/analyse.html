@@ -1,6 +1,8 @@
 {% extends 'index.html' %}
 
 {% block content %}
+
+{% load staticfiles %}
 <div class="doc">
 <div class="menu">
 	<ul>
@@ -12,93 +14,38 @@
 		<a href="/SYMBOL/{{symbol}}/Others"><li class="menu_btn" id="c6">Other Indicators</li></a>
 	</ul>
 </div>
-<div class= "visual">
-	<div class="graph_title">
-		<div><span id="sym_title" style="font-size: 32px">NASDAQ:{{symbol}}</span><span style="float: right;"><a href="/SYMBOL/{{symbol}}/Updatedata" class="update">Update</a></span></div><br> <div><span><b style="font-size: 28px">{{last_price}} USD </b>
-			{% if change > 0 %}
-				<span style="font-size: 18px; color:green">{{change}} ({{per}}%)</span>
-			{% else %}
-				<span style="font-size: 18px; color:red">{{change}} ({{per}}%)</span>
-			{% endif %}
-			
-			</div> <div>Closed: {{close_date}}</div>
-	</div>
+<div class="line"></div>
+<div class="analysis-box">
+  <form id="analysis-stock" class="analysis-search-box" style="width: 244px;" >
+            <input type="text" id="myInput1" placeholder="Enter Analysis type" class="search-box analysis-search-txt" name="indicator_name">
+            <input type="text" id="myInput2" placeholder="Enter the period to evaluate" class="search-box analysis-search-txt" name="indicator_period">
+            <input type="text" id="myInput3" placeholder="Enter the unit to evaluate" class="search-box analysis-search-txt" name="symbol">
+            <a  class="search-btn analysis-btn" onclick="getAnalysis()">
+                    <i class="fas fa-search"></i>
+            </a>         
+  </form>
+<div class= "visual visual_analysis">
+  <div class="graph_title graph_analysis">
+    <div><span id="sym_title" style="font-size: 32px">NASDAQ:</span><span id="sym" style="font-size: 32px">{{symbol}}</span></div><br> <div><span><b style="font-size: 23px">INDICATOR: {{analyse}}</b><br>
+        <span style="font-size: 23px; ">PERIOD: {{period}}</span><br>
+        <span style="font-size: 23px; ">UNIT: {{unit}} price</span>
+    </div>
+    <div class="analysis_chart">
+      <iframe src="{% static "analysis/temp-plot.html"  %}"  id='iframe_content' ></iframe>
+    </div>
+      
+      <!-- <div id="tagrget_loader"></div>
+      
+      <script>
+        var url="{% static "analysis/temp-plot.html" %}"
+        console.log(url)
+        $('#tagrget_loader').load(url);
+      </script> -->
+  
+</div>
 
-	<div id="graph"></div>
 
-	<script>
-
-  var temp =window.localStorage.newdat;
-  var temp1 =temp.split(',');
-  var trace = {
-  x: temp1,
-  close: {{close}},
-  high: {{high}},
-  low: {{low}},
-  open: {{open}},
-
-  // cutomise colors
-  increasing: {line: {color: 'green'}},
-  decreasing: {line: {color: 'red'}},
-//TODO add ohlc type also
-  type: ''candlestick'',
-  xaxis: 'x',
-  yaxis: 'y'
-};
-
-var data = [trace];
-
-var layout = {
-  dragmode: 'zoom',
-  showlegend: false,
-  xaxis: {
-    autorange: true,
-    title: 'Date',
-	 rangeselector: {
-        x: 0,
-        y: 1.2,
-        xanchor: 'left',
-        font: {size:15},
-        buttons: [{
-            step: 'day',
-            stepmode: 'backward',
-            count: 5,
-            label: ' 5 days '
-        }, {
-            step: 'month',
-            stepmode: 'backward',
-            count: 1,
-            label: ' 1 month '
-        }, {
-            step: 'month',
-            stepmode: 'backward',
-            count: 6,
-            label: ' 6 months '
-        }, {
-            step: 'year',
-            stepmode: 'todate',
-            count: 1,
-            label: ' YTD '
-        }, {
-            step: 'year',
-            stepmode: 'backward',
-            count: 1,
-            label: ' 1 year '
-        }, {
-            step: 'all',
-            label: ' Max '
-        }]
-      }
-  },
-  yaxis: {
-  	title:'Close price',
-    autorange: true,
-  }
-};
-
-Plotly.plot('graph', data, layout);
-
-	</script>
+	
 </div>
 </div>
 

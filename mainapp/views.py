@@ -7,9 +7,12 @@ import sqlite3
 import pandas as pd 
 from modules.make_graph import graph,find_price
 from modules.update_data import upd
+from modules.retrieve_indicator import indicator
 from datetime import date, datetime
 import datetime as newdatetime
 import json
+import plotly.graph_objs as go
+from plotly.offline import download_plotlyjs,plot,iplot
 
 def index(request):
     template = loader.get_template('index.html')
@@ -22,13 +25,39 @@ def update(request,symbol):
     upd(symbol)
     return base(request,symbol)
 
-def analyse(request,symbol,analysis_type='default',period=30):
-    if analyse == 'default':
-        indicator_name = 'SMA'
-        interval =''
+def make_graph(cdf,analysis_type):
+    x_new=[]
+    y_new=[]
+    x =cdf.date.values;
+    for i in range(len(x)-1,-1,-1):
+        x_new.append(datetime.strptime(x[i],'%d-%m-%Y'))
+    y=cdf[analysis_type].values
+    for i in range(len(y)-1,-1,-1):
+        y_new.append(y[i])
+    return x_new,y_new
+
+def analyse(request,symbol,analysis_type='default',period=30,unit='close'):
+    if analysis_type == 'default':
+        analysis_type = 'SMA'
+        
     template = loader.get_template('analyse.html')
+    cdf1=indicator(analysis_type,symbol,period,'daily',unit)
+    cdf3=indicator(analysis_type,symbol,period,'monthly',unit)
+    cdf2=indicator(analysis_type,symbol,period,'weekly',unit)
+    x,y=make_graph(cdf1,analysis_type)
+    trace1=go.Scatter(x=x, y=y,name='daily', mode='markers', marker=dict(size=3))
+    x,y=make_graph(cdf2,analysis_type)
+    trace2=go.Scatter(x=x, y=y,name='weekly', mode='markers', marker=dict(size=3))
+    x,y=make_graph(cdf3,analysis_type)
+    trace3=go.Scatter(x=x, y=y,name='monthly', mode='markers', marker=dict(size=3))
+    data =[trace1,trace2,trace3]
+    plot(data,validate=True, output_type='file', include_plotlyjs=True, filename='static/analysis/temp-plot.html',auto_open=False,)
     context = {
         'test_message' : 'working',
+        'symbol':symbol,
+        'analyse':analysis_type,
+        'period':period,
+        'unit':unit,
     }
     return HttpResponse(template.render(context, request))
 
