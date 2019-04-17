@@ -64,6 +64,38 @@ class CSCO(models.Model):
     adj_close_price = models.FloatField(default=0.0)
     volume = models.FloatField(default=0.0)
 
-# class NEWS(models.Model):
-#     news_date =models.DateTimeField('news date')
-#     news_ticker =models.DateTimeField('news date')
+class Twitter_TSLA(models.Model):
+    tweet_id= models.BigIntegerField(primary_key=True)
+    tweet_text = models.TextField()
+    tweet_date = models.DateField('date')
+    follower_count = models.IntegerField(default=0)
+
+class Twitter_INTC(models.Model):
+    tweet_id= models.BigIntegerField(primary_key=True)
+    tweet_text = models.TextField()
+    tweet_date = models.DateField('date')
+    follower_count = models.IntegerField(default=0)
+
+class Twitter_NVDA(models.Model):
+    tweet_id= models.BigIntegerField(primary_key=True)
+    tweet_text = models.TextField()
+    tweet_date = models.DateField('date')
+    follower_count = models.IntegerField(default=0)
+
+class Twitter_QCOM(models.Model):
+    tweet_id= models.BigIntegerField(primary_key=True)
+    tweet_text = models.TextField()
+    tweet_date = models.DateField('date')
+    follower_count = models.IntegerField(default=0)
+
+class Twitter_MSFT(models.Model):
+    tweet_id= models.BigIntegerField(primary_key=True)
+    tweet_text = models.TextField()
+    tweet_date = models.DateField('date')
+    follower_count = models.IntegerField(default=0)
+
+class Twitter_CSCO(models.Model):
+    tweet_id= models.BigIntegerField(primary_key=True)
+    tweet_text = models.TextField()
+    tweet_date = models.DateField('date')
+    follower_count = models.IntegerField(default=0)
