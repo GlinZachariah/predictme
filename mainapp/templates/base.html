@@ -9,7 +9,6 @@
 		<a href="/SYMBOL/{{symbol}}/Predict"><li class="menu_btn" id="c3">Predict</li></a>
 		<a href="/SYMBOL/{{symbol}}/Twitter"><li class="menu_btn" id="c4">Twitter</li></a>
 		<a href="/SYMBOL/{{symbol}}/News"><li class="menu_btn" id="c5">News</li></a>
-		<a href="/SYMBOL/{{symbol}}/Others"><li class="menu_btn" id="c6">Other Indicators</li></a>
 	</ul>
 </div>
 <div class= "visual">
@@ -99,7 +98,62 @@ var layout = {
 Plotly.plot('graph', data, layout);
 
 	</script>
+<style>
+  table,tr{
+    width:80%;
+    position: relative;
+    margin:0 auto;
+    padding:5px 0;
+  }
+  table{
+    margin-bottom: 30px;
+  }
+</style>
+  <table >
+    <tr>
+           <td>1y Target Est</td>
+           <td><b>{{val1}}</b></td>
+           <td>52 Week Range</td>
+           <td><b>{{val2}}</b></td>
+           <td>Ask</td>
+           <td><b>{{val3}}</b></td>
+           <td>Avg. Volume</td>
+           <td><b>{{val4}}</b></td>
+         </tr>
+         <tr>
+           <td>Beta (3Y Monthly)</td>
+           <td><b>{{val5}}</b></td>
+           <td>Bid</td>
+           <td><b>{{val6}}</b></td>
+           <td>EPS (TTM)</td>
+           <td><b>{{val7}}</b></td>
+           <td>Earnings Date</td>
+           <td><b>{{val8}}</b></td>
+         </tr>
+         <tr>
+           <td>Ex-Dividend Date</td>
+           <td><b>{{val9}}</b></td>
+           <td>Forward Dividend & Yield</td>
+           <td><b>{{val10}}</b></td>
+           <td>Market Cap</td>
+           <td><b>{{val11}}</b></td>
+           <td>Open</td>
+           <td><b>{{val12}}</b></td>
+         </tr>
+         <tr>
+           <td>PE Ratio (TTM)</td>
+           <td><b>{{val13}}</b></td>
+           <td>Previous Close</td>
+           <td><b>{{val14}}</b></td>
+           <td>Quote Price</td>
+           <td><b>{{val15}}</b></td>
+           <td>Volume</td>
+           <td><b>{{val16}}</b></td>
+         </tr>  
+  </table>
 </div>
+<div style="height: 50px; width: 100%;"></div>
+
 </div>
 
 

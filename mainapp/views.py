@@ -13,6 +13,7 @@ import datetime as newdatetime
 import json
 import plotly.graph_objs as go
 from plotly.offline import download_plotlyjs,plot,iplot
+from yahoo_fin import stock_info as si
 
 def index(request):
     template = loader.get_template('index.html')
@@ -64,6 +65,7 @@ def analyse(request,symbol,analysis_type='default',period=30,unit='close'):
 
 
 def base(request,symbol):
+    liveval = si.get_quote_table(symbol)
     template = loader.get_template('base.html')
     cnx = sqlite3.connect('db.sqlite3')
     df = pd.read_sql_query("SELECT * FROM mainapp_"+symbol.lower(), cnx)
@@ -102,7 +104,23 @@ def base(request,symbol):
         'open':list(df['open_price'].values),
         'high':list(df['high_price'].values),
         'low':list(df['low_price'].values),
-    }
+        'val1':liveval['1y Target Est'],
+        'val2':liveval['52 Week Range'],
+        'val3':liveval['Ask'],
+        'val4':liveval['Avg. Volume'],
+        'val5':liveval['Beta (3Y Monthly)'],
+        'val6':liveval['Bid'],
+        'val7':liveval['EPS (TTM)'],
+        'val8':liveval['Earnings Date'],
+        'val9':liveval['Ex-Dividend Date'],
+        'val10':liveval['Forward Dividend & Yield'],
+        'val11':liveval['Market Cap'],
+        'val12':liveval['Open'],
+        'val13':liveval['PE Ratio (TTM)'],
+        'val14':liveval['Previous Close'],
+        'val15':'%.2f'%(liveval['Quote Price']),
+        'val16':liveval['Volume'],
+        }
     return HttpResponse(template.render(context, request))
 
 def predict(request,symbol):
@@ -128,5 +146,42 @@ def predict(request,symbol):
         'last_price': last_price,
         'per':per,
         'close_date':close_date,
+    }
+    return HttpResponse(template.render(context, request))
+
+from .models import Twitter_CSCO as csco
+def twitter(request,symbol):
+    template = loader.get_template('twitter.html')
+    # cnx = sqlite3.connect('db.sqlite3')
+    # df = pd.read_sql_query("SELECT * FROM mainapp_twitter_"+symbol.lower()+" LIMIT 30", cnx)
+    # twid =list(df['tweet_id'])
+    # twtext =list(df['tweet_text'])
+    # twdate =list(df['tweet_date'])
+    # twfollower_count =list(df['follower_count'])
+    # count = len(twid)
+    # # counter =0
+    # final = []
+    # for i in range(count):
+    #     final.append(twid[i])
+    #     final.append(twtext[i])
+    #     final.append(twdate[i])
+    #     final.append(twfollower_count[i])
+    
+    context = {
+        'test_message' : 'working',
+        'symbol' : symbol,
+        # 'final':final,
+        # 'count':count,
+        # 'range':range(4),
+        # 'counter':counter,
+        'csco':csco.objects.all(),
+    }
+    return HttpResponse(template.render(context, request))
+
+def news(request,symbol):
+    template = loader.get_template('index.html')
+    context = {
+        'test_message' : 'working',
+        'symbol' : symbol,
     }
     return HttpResponse(template.render(context, request))

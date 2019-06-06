@@ -1,0 +1,23 @@
+{% extends 'index.html' %}
+
+{% block content %}
+{% load render_table from django_tables2 %}
+<div class="doc">
+<div class="menu">
+	<ul>
+		<a href="/SYMBOL/{{symbol}}"><li class="menu_btn" id="c1">Home</li></a>
+		<a href="/SYMBOL/{{symbol}}/Analysis"><li class="menu_btn" id="c2">Analysis</li></a>
+		<a href="/SYMBOL/{{symbol}}/Predict"><li class="menu_btn" id="c3">Predict</li></a>
+		<a href="/SYMBOL/{{symbol}}/Twitter"><li class="menu_btn" id="c4">Twitter</li></a>
+		<a href="/SYMBOL/{{symbol}}/News"><li class="menu_btn" id="c5">News</li></a>
+	</ul>
+</div>
+<div class= "visual">
+	<div class="graph_title">
+     {% render_table csco %}
+  </div>
+</div>
+</div>
+
+
+{% endblock %}
