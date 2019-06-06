@@ -11,6 +11,7 @@ from modules.retrieve_indicator import indicator
 from datetime import date, datetime
 import datetime as newdatetime
 import json
+import itertools
 import plotly.graph_objs as go
 from plotly.offline import download_plotlyjs,plot,iplot
 from yahoo_fin import stock_info as si
@@ -149,16 +150,23 @@ def predict(request,symbol):
     }
     return HttpResponse(template.render(context, request))
 
-from .models import Twitter_CSCO as csco
+# from .models import Twitter_CSCO as csco
 def twitter(request,symbol):
     template = loader.get_template('twitter.html')
-    # cnx = sqlite3.connect('db.sqlite3')
-    # df = pd.read_sql_query("SELECT * FROM mainapp_twitter_"+symbol.lower()+" LIMIT 30", cnx)
-    # twid =list(df['tweet_id'])
-    # twtext =list(df['tweet_text'])
-    # twdate =list(df['tweet_date'])
-    # twfollower_count =list(df['follower_count'])
-    # count = len(twid)
+    cnx = sqlite3.connect('db.sqlite3')
+    df = pd.read_sql_query("SELECT * FROM mainapp_twitter_"+symbol.lower()+" LIMIT 20", cnx)
+    twid =list(df['tweet_id'])
+    twtext =list(df['tweet_text'])
+    twdate =list(df['tweet_date'])
+    twfollower_count =list(df['follower_count'])
+    lst = []
+    for i in twtext:
+        if i[0:4] == "rt :":
+            lst.append(1)
+        else:
+            lst.append(0)
+    final_items= list(zip(twid,twtext,twdate,twfollower_count,lst))
+    
     # # counter =0
     # final = []
     # for i in range(count):
@@ -170,11 +178,17 @@ def twitter(request,symbol):
     context = {
         'test_message' : 'working',
         'symbol' : symbol,
+        'final_items':final_items,
+        'lst':lst,
+        # 'twid':twid,
+        # 'twtext':twtext,
+        # 'twdate':twdate,
+        # 'twfollower_count':twfollower_count,
         # 'final':final,
         # 'count':count,
         # 'range':range(4),
         # 'counter':counter,
-        'csco':csco.objects.all(),
+        # 'csco':csco.objects.all(),
     }
     return HttpResponse(template.render(context, request))
 

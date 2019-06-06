@@ -1,7 +1,7 @@
 {% extends 'index.html' %}
 
 {% block content %}
-{% load render_table from django_tables2 %}
+{% load static %}
 <div class="doc">
 <div class="menu">
 	<ul>
@@ -13,11 +13,43 @@
 	</ul>
 </div>
 <div class= "visual">
+	<div style="margin-bottom: 50px; width: 95%;"><span style="float: right;"><a href="" class="update">Update</a></span></div>
 	<div class="graph_title">
-     {% render_table csco %}
+	<style>
+		table,td{
+			padding: 6px 10px;
+		}
+		tr.twt{
+ 		 border-bottom:5px solid black ;
+ 		 box-shadow:0px 3px black;
+		}
+	</style>
+
+	<table>
+		<tr class='twt'>
+			<td><b>TWEET TEXT</b></td><td><b>DATE</b></td><td><b>FOLLOWER COUNT</b></td>
+		</tr>
+     {% for i,j,k,l,m in final_items %}
+		<tr class='twt'>
+			<td>
+				<div style="font-size: 20px; font-family: Veranda;">
+					<span style=" position: relative;vertical-align: super;font-size: 10px;">{{i}}</span><br><img src="{% static "images/twitter.png" %}" alt=""> 
+					{% if m == 1 %}
+						<img src="{% static "images/retweet.png" %}" alt="">
+					{% endif %}
+					{{j}}
+				</div>
+			</td>
+			<td>{{k}}</td>
+			<td>{{l}}</td>
+
+		</tr>
+     {% endfor %}
+ 	</table>
+ 	<div style="height: 30px; width: 100%;"></div>
   </div>
 </div>
 </div>
-
+<div style="height: 50px; width: 100%;"></div>
 
 {% endblock %}
