@@ -154,7 +154,7 @@ def predict(request,symbol):
     }
     return HttpResponse(template.render(context, request))
 
-# from .models import Twitter_CSCO as csco
+
 def twitter(request,symbol):
     template = loader.get_template('twitter.html')
     cnx = sqlite3.connect('db.sqlite3')
@@ -171,28 +171,12 @@ def twitter(request,symbol):
             lst.append(0)
     final_items= list(zip(twid,twtext,twdate,twfollower_count,lst))
     
-    # # counter =0
-    # final = []
-    # for i in range(count):
-    #     final.append(twid[i])
-    #     final.append(twtext[i])
-    #     final.append(twdate[i])
-    #     final.append(twfollower_count[i])
     
     context = {
         'test_message' : 'working',
         'symbol' : symbol,
         'final_items':final_items,
         'lst':lst,
-        # 'twid':twid,
-        # 'twtext':twtext,
-        # 'twdate':twdate,
-        # 'twfollower_count':twfollower_count,
-        # 'final':final,
-        # 'count':count,
-        # 'range':range(4),
-        # 'counter':counter,
-        # 'csco':csco.objects.all(),
     }
     return HttpResponse(template.render(context, request))
 
