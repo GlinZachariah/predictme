@@ -87,7 +87,10 @@ def base(request,symbol):
     secondlast_price,last_price =find_price(symbol,df)
     dt = df['price_date'].values;
     close_date = pd.Timestamp(dt[len(dt)-1]).date()
-    change = secondlast_price -last_price
+    change = last_price -secondlast_price 
+    sign=0
+    if(change>0):
+        sign=1
     per  = (change/last_price)*100
     change ='%.2f'%(change)
     per ='%.2f'%(per)
@@ -96,6 +99,7 @@ def base(request,symbol):
     last_price ='%.2f'%(last_price)
     context = {
         'symbol' : symbol,
+        'sign':sign,
         'temp':df,
         'change': change,
         'last_price': last_price,
