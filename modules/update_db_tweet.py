@@ -30,8 +30,8 @@ def updateTweet(date,comp):
 
 	sort_by_time.drop_duplicates(subset ='Id',keep = False, inplace = True)
 	sort_by_time.drop_duplicates(subset = 'Text',keep = False, inplace = True)
-	return sort_by_time
+	print(sort_by_time)
 #sort_by_time.to_csv("new1.csv")
 
 
-# updateTweet('2019-01-24','CSCO')
+# updateTweet('2019-06-05','CSCO')

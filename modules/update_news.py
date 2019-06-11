@@ -13,7 +13,28 @@ headers = ['ticker','company', 'date', 'title', 'news', 'priority']
 print("Retrieving days...")
 date = datetime.strptime(date, '%Y-%m-%d').strftime('%m%d%Y')
 #getting data
-url = "https://raw.githubusercontent.com/d4datas/stocknews/master/news_"+str(date)+".csv"
+
+
+import http.client
+
+
+
+while( True):
+	url = "raw.githubusercontent.com"
+	c = http.client.HTTPConnection(url)
+	c.request("HEAD", "/d4datas/stocknews/master/news_"+str(date)+".csv")
+	if c.getresponse().status == 200:
+		url="http://raw.githubusercontent.com/d4datas/stocknews/master/news_"+str(date)+".csv"
+		break
+
+	else:
+			date = datetime.strptime(date,'%m%d%Y').strftime('%Y-%m-%d')
+			
+			print(date)
+			date=str(date)+timedelta(days=1)
+
+	
+
 val = pd.read_csv(url,names = headers,usecols = ['ticker','date','title', 'news'],engine = 'python')
 
 #val.drop_duplicates(subset ='news',keep = False, inplace = True)

@@ -23,15 +23,16 @@ def gen_weight(date,comp,dfstk):
 	 	company="cisco"
 	elif comp=="MSFT":
 		company="microsoft"
+	print(company,dfstk)
 	# company=input("enter the name of the company:(cisco)")
 	#company="cisco"
-	header=['Id','Text','Date','Time','Followers count']
+	header=['Id','Text','price_date','Time','Followers count']
 
 	#changing to datetime format and fetching first data
 	print("\ncollecting tweets from each date...\n")
 	date=datetime.strptime(date,"%Y-%m-%d").date()
 	url="https://raw.githubusercontent.com/d4datas/twitterdata/master/"+str(company)+"-final-"+str(date)+".csv"
-	df=pd.read_csv(url,sep='\^',error_bad_lines=False,names=header,usecols = ['Id','Text','Date','Followers count'],skiprows='1',engine='python')
+	df=pd.read_csv(url,sep='\^',error_bad_lines=False,names=header,usecols = ['Id','Text','price_date','Followers count'],skiprows='1',engine='python')
 
 	#iterately collect data till yesterday and concatenate
 	datenow=datenow-timedelta(days=1)
@@ -39,7 +40,7 @@ def gen_weight(date,comp,dfstk):
 		print(date)
 		date=date+timedelta(days=1)
 		url="https://raw.githubusercontent.com/d4datas/twitterdata/master/"+str(company)+"-final-"+str(date)+".csv"
-		df1=pd.read_csv(url,sep='\^',error_bad_lines=False,names=header,usecols = ['Id','Text','Date','Followers count'],skiprows='1',engine='python')
+		df1=pd.read_csv(url,sep='\^',error_bad_lines=False,names=header,usecols = ['Id','Text','price_date','Followers count'],skiprows='1',engine='python')
 		df = pd.concat([df, df1], ignore_index=True)
 
 	#delete dulpicates in terms of id and text
@@ -52,7 +53,7 @@ def gen_weight(date,comp,dfstk):
 
 	#preprocessing and replacing text from each row using re and preprocessor
 	print("starting preprocessing of each row...\n")
-	time.sleep(2)
+	# time.sleep(2)
 	for j, tweet_text in df.iterrows():
 		print(j)
 		tweet_text = df.at[j,'Text']
@@ -88,15 +89,15 @@ def gen_weight(date,comp,dfstk):
 	analyser = SentimentIntensityAnalyzer()
 	print("\nanalysing sentiment for each date data...\n")
 	#extracting the dates to iterate
-	dates = df['Date'].unique().tolist()
+	dates = df['price_date'].unique().tolist()
 	#print("list created")
 	f= open('sentiment_data.csv', 'a')
-	f.write("Date,negative,positive,neutral,compound,subjectivity,polarity\n")
+	f.write("price_date,negative,positive,neutral,compound,subjectivity,polarity\n")
 	f.close()
 
 	def calcualte_senti(data,df):
 		date =data
-		mask = (df['Date'] == str(date))
+		mask = (df['price_date'] == str(date))
 		df = df.loc[mask]
 		total_rows=1
 
@@ -137,8 +138,8 @@ def gen_weight(date,comp,dfstk):
 
 	#dropping unwanted raws
 	df = pd.read_csv("sentiment_data.csv",error_bad_lines=False)
-	df['Date'] = pd.to_datetime(df['Date'], format='%Y-%m-%d', errors='coerce')
-	df = df[pd.notnull(df['Date'])]
+	df['price_date'] = pd.to_datetime(df['price_date'], format='%Y-%m-%d', errors='coerce')
+	df = df[pd.notnull(df['price_date'])]
 	#print(df)
 
 	#removing temporary file
@@ -146,7 +147,7 @@ def gen_weight(date,comp,dfstk):
 
 	#scaling the data using minmax method to 0.8-1.2 range
 	print("\nscaling data...\n")
-	time.sleep(2)
+	# time.sleep(2)
 	#OldRange = (OldMax - OldMin)
 	oldrange = 1.5
 	oldmin = -.5
@@ -156,7 +157,7 @@ def gen_weight(date,comp,dfstk):
 	l=[]
 	for data in df['compound']:
 		#NewValue = (((OldValue - OldMin) * NewRange) / OldRange) + NewMin
-		newvalue = (((data - oldmin) * newrange) / oldrange) + newmin
+		newvalue = (((float(data) - oldmin) * newrange) / oldrange) + newmin
 		print(str(data)+'====>'+str(newvalue))
 		l.append(newvalue)
 	df['sentiment']=l
@@ -168,19 +169,19 @@ def gen_weight(date,comp,dfstk):
 
 	#merging sentiment data and stock data
 	print("merging data...\n")
-	time.sleep(2)
-	df['Date'] = pd.to_datetime(df['Date'])
-	dfstk['Date'] = pd.to_datetime(dfstk['Date'])
-	dfmrg = pd.merge(df, dfstk, on="Date")
+	# time.sleep(2)
+	df['price_date'] = pd.to_datetime(df['price_date'])
+	dfstk['price_date'] = pd.to_datetime(dfstk['price_date'])
+	dfmrg = pd.merge(df, dfstk, on="price_date")
 	#print(dfmrg)
 	#dfmrg.to_csv("sentistock.csv")
 	#creating a copy with needed columns (adjust for needed columns)
-	dfnl = dfmrg[['Date','Open','High','Low','Volume','Close','Adj Close','sentiment']].copy()
+	dfnl = dfmrg[['price_date','open_price','close_price','low_price','high_price','adj_close_price','volume','sentiment']].copy()
 
 	#adding weighted value to the dataframe
 	print("adding weightage...\n")
-	time.sleep(2)
-	dfnl['weight_value']=dfnl['Close']*dfnl['sentiment']
-	dfnl['weight_adjusted_close'] = dfnl['Adj Close'] * dfnl['sentiment'] 
+	# time.sleep(2)
+	dfnl['weighted_close_price']=dfnl['close_price']*dfnl['sentiment']
+	dfnl['weight_adj_close_price'] = dfnl['adj_close_price'] * dfnl['sentiment'] 
 	return dfnl
 #dfnl.to_csv("final_data.csv")
