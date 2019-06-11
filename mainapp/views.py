@@ -8,6 +8,7 @@ import pandas as pd
 from modules.make_graph import graph,find_price
 from modules.update_data import upd
 from modules.retrieve_indicator import indicator
+from modules.finalfn import gen_weight
 from datetime import date, datetime
 import datetime as newdatetime
 import json
@@ -197,4 +198,8 @@ def generateWeighted(request,symbol):
     cnx = sqlite3.connect('db.sqlite3')
     cond_df = pd.read_sql_query("SELECT * FROM mainapp_predictdata_"+symbol.lower()+" ORDER by price_date DESC LIMIT 1", cnx)
     cond_date=cond_df['price_date'][0] 
-    stock_df = pd.read_sql_query("SELECT * FROM mainapp_"+symbol.lower()+" WHERE price_date> "+cond_date, cnx)
+    stock_df = pd.read_sql_query("SELECT * FROM mainapp_"+symbol.lower()+" WHERE price_date> '"+cond_date+"'", cnx)
+    gen_weight(12)
+    # we = gen_weight(cond_date,symbol,stock_df)
+    # print(we)
+    # return 
