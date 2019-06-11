@@ -144,9 +144,9 @@ def predict(request,symbol):
     dates =df['price_date'].values
 
     prices=list(df['close_price'].values)
-    arima = open('arima.txt','r')
+    arima = open('arima_'+symbol.lower()+'.txt','r')
     arima_data =arima.read()
-    lstm = open('lstm.txt','r')
+    lstm = open('lstm_'+symbol.lower()+'.txt','r')
     lstm_data= lstm.read()
     last_date= dates[8]
     last_date=last_date.astype('M8[D]').astype('O')
@@ -257,7 +257,13 @@ def generateWeighted(request,symbol):
     final_content= list(zip(twdate,open_p,close_p,high_p,low_p,vol,adj_close_p,senti,w_close_p,adj_w_close_p))
     cursor = db.cursor()
     for a,b,c,d,e,f,g,h,i,j in final_content:
-        cursor.execute('''INSERT INTO mainapp_predictdata_'''+symbol.lower()+''' (price_date, open_price, close_price, high_price,low_price,volume,adj_close_price,sentiment,weighted_close_price,adj_weighted_close_price) VALUES('''+str(a)+''','''+b+''','''+c+''','''+d+''','''+e+''','''+f+''','''+g+''','''+h+''','''+i+''','''+j+''')''')
+        cursor.execute('''INSERT INTO mainapp_predictdata_'''+symbol.lower()+''' (price_date, open_price, close_price, high_price,low_price,volume,adj_close_price,sentiment,weighted_close_price,weighted_adj_close_price) VALUES('''+str(a)+''','''+b+''','''+c+''','''+d+''','''+e+''','''+f+''','''+g+''','''+h+''','''+i+''','''+j+''')''')
     db.commit()
     return predict(request,symbol)
     
+def generateCSV(request,symbol):
+    cnx = sqlite3.connect('db.sqlite3')
+    print_df = pd.read_sql_query("SELECT price_date, open_price, close_price, high_price,low_price,volume,adj_close_price,sentiment,weighted_close_price,weighted_adj_close_price FROM mainapp_predictdata_"+symbol.lower(), cnx)
+    # print("df sucess",print_df)
+    print_df.to_csv("final_data_"+symbol.lower()+".csv",sep=",")
+    return predict(request,symbol)
