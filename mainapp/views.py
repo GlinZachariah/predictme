@@ -133,26 +133,29 @@ def base(request,symbol):
 def predict(request,symbol):
     template = loader.get_template('predict.html')
     cnx = sqlite3.connect('db.sqlite3')
-    df = pd.read_sql_query("SELECT * FROM mainapp_"+symbol.lower(), cnx)
+    df = pd.read_sql_query("SELECT price_date,close_price FROM mainapp_"+symbol.lower()+" ORDER by price_date DESC LIMIT 9", cnx)
     df.price_date =pd.to_datetime(df.price_date)
     df = df.sort_values('price_date')
-    secondlast_price,last_price =find_price(symbol,df)
-    dt = df['price_date'].values;
-    close_date = pd.Timestamp(dt[len(dt)-1]).date()
-    change = secondlast_price -last_price
-    per  = (change/last_price)*100
-    change ='%.2f'%(change)
-    per ='%.2f'%(per)
-    if change[0] != '-' :
-        change="+"+change
-    last_price ='%.2f'%(last_price)
+    dates =df['price_date'].values
+    prices=df['close_price'].values
+    arima = open('arima.txt','r')
+    arima_data =arima.read()
+    print(arima_data)
+    lstm = open('lstm.txt','r')
+    lstm_data= lstm.read()
+    print(lstm_data)
+    last_date= dates[8]
+    
+    # last_date += newdatetime.timedelta(days=1)
+    
+    print(df)
     context = {
         'symbol' : symbol,
         'temp':df,
-        'change': change,
-        'last_price': last_price,
-        'per':per,
-        'close_date':close_date,
+        # 'change': change,
+        # 'last_price': last_price,
+        # 'per':per,
+        # 'close_date':close_date,
     }
     return HttpResponse(template.render(context, request))
 
@@ -183,7 +186,7 @@ def twitter(request,symbol):
     return HttpResponse(template.render(context, request))
 
 def news(request,symbol):
-    template = loader.get_template('index.html')
+    template = loader.get_template('news.html')
     context = {
         'test_message' : 'working',
         'symbol' : symbol,
