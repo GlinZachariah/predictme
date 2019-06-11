@@ -9,7 +9,7 @@ from modules.make_graph import graph,find_price
 from modules.update_data import upd
 from modules.retrieve_indicator import indicator
 from modules.finalfn import gen_weight
-
+from modules.update_db_tweet import updateTweet
 from datetime import date, datetime
 import datetime as newdatetime
 import json
@@ -199,15 +199,21 @@ def predict(request,symbol):
 
 def twitter(request,symbol):
     template = loader.get_template('twitter.html')
-    cnx = sqlite3.connect('db.sqlite3')
-    df = pd.read_sql_query("SELECT * FROM mainapp_twitter_"+symbol.lower()+" LIMIT 20", cnx)
-    twid =list(df['tweet_id'])
-    twtext =list(df['tweet_text'])
-    twdate =list(df['tweet_date'])
-    twfollower_count =list(df['follower_count'])
+    # cnx = sqlite3.connect('db.sqlite3')
+    # cdf = pd.read_sql_query("SELECT * FROM mainapp_twitter_"+symbol.lower()+" ORDER by tweet_id LIMIT 1", cnx)
+    # from_date =cdf['tweet_date'][0]
+    from_date='2019-06-09'
+    mdf=updateTweet(from_date,symbol)
+    df= mdf.tail(15)
+    # cnx = sqlite3.connect('db.sqlite3')
+    # df = pd.read_sql_query("SELECT * FROM mainapp_twitter_"+symbol.lower()+" LIMIT 20", cnx)
+    twid =list(df['Id'])
+    twtext =list(df['Text'])
+    twdate =list(df['Date'])
+    twfollower_count =list(df['Followers count'])
     lst = []
     for i in twtext:
-        if i[0:4] == "rt :":
+        if i[0:5] == "'rt :":
             lst.append(1)
         else:
             lst.append(0)
