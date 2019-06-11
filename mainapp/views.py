@@ -15,6 +15,7 @@ import datetime as newdatetime
 import json
 import itertools
 import plotly.graph_objs as go
+import plotly.offline
 from plotly.offline import download_plotlyjs,plot,iplot
 from yahoo_fin import stock_info as si
 
@@ -138,8 +139,11 @@ def predict(request,symbol):
     df = pd.read_sql_query("SELECT price_date,close_price FROM mainapp_"+symbol.lower()+" ORDER by price_date DESC LIMIT 9", cnx)
     df.price_date =pd.to_datetime(df.price_date)
     df = df.sort_values('price_date')
+    # df.price_date=df['price_date'].strptime("%Y-%m-%d")
+    df['price_date'].apply(lambda x: x.strftime('%dY-%m-%d'))
     dates =df['price_date'].values
-    prices=df['close_price'].values
+
+    prices=list(df['close_price'].values)
     arima = open('arima.txt','r')
     arima_data =arima.read()
     lstm = open('lstm.txt','r')
@@ -147,9 +151,37 @@ def predict(request,symbol):
     last_date= dates[8]
     last_date=last_date.astype('M8[D]').astype('O')
     last_date += newdatetime.timedelta(days=1)
+    dates =list(map(lambda x:x.astype('M8[D]').astype('O'),dates))
+    val =list(map(lambda x:x.strftime("%Y-%m-%d"),dates))    
     dates=list(dates)
     dates.append(last_date)
-    print(df)
+    
+
+    trace1 = go.Scatter(
+    x = dates,
+    y = prices,
+    mode = 'lines',
+    name ='PAST DATA'
+    )
+
+    trace2 = go.Scatter(
+    x = [last_date],
+    y = [arima_data],
+    mode = 'markers',
+    name ='ARIMA'
+    )
+
+    trace3 = go.Scatter(
+    x = [last_date],
+    y = [lstm_data],
+    mode = 'markers',
+    name ='LSTM'
+    )
+    data = [trace1,trace2,trace3]
+    print(data)
+    fig = go.Figure(data=data)
+    plotly.offline.plot(fig, filename = 'static/data.html', auto_open=False)
+
     context = {
         'symbol' : symbol,
         'temp':df,
