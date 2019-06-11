@@ -27,6 +27,8 @@ def update(request,symbol):
     upd(symbol)
     return base(request,symbol)
 
+
+
 def make_graph(cdf,analysis_type):
     x_new=[]
     y_new=[]
