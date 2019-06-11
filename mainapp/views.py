@@ -178,8 +178,12 @@ def predict(request,symbol):
     name ='LSTM'
     )
     data = [trace1,trace2,trace3]
-    print(data)
-    fig = go.Figure(data=data)
+    # print(data)
+    layout = go.Layout(
+    title="Predicted "+symbol,
+    font=dict(family='Veranda', size=24, color='#7f7f7f')
+    )
+    fig = go.Figure(data=data,layout=layout)
     plotly.offline.plot(fig, filename = 'static/data.html', auto_open=False)
 
     context = {
