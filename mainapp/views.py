@@ -241,7 +241,23 @@ def generateWeighted(request,symbol):
     cond_df = pd.read_sql_query("SELECT * FROM mainapp_predictdata_"+symbol.lower()+" ORDER by price_date DESC LIMIT 1", cnx)
     cond_date=cond_df['price_date'][0] 
     stock_df = pd.read_sql_query("SELECT * FROM mainapp_"+symbol.lower()+" WHERE price_date> '"+cond_date+"'", cnx)
-    we = gen_weight(cond_date,symbol,stock_df)
+    df = gen_weight(cond_date,symbol,stock_df)
     # we = gen_weight(cond_date,symbol,stock_df)
-    print(we)
+    twdate =list(df['price_date'])
+    open_p =list(df['open_price'])
+    low_p =list(df['low_price'])
+    close_p=list(df['close_price'])
+    high_p =list(df['high_price'])
+    adj_close_p=list(df['adj_close_price'])
+    vol =list(df['volume'])
+    senti =list(df['sentiment'])
+    w_close_p =list(df['weighted_close_price'])
+    adj_w_close_p = list(df['weighted_adj_close_price'])
+
+    final_content= list(zip(twdate,open_p,close_p,high_p,low_p,vol,adj_close_p,senti,w_close_p,adj_w_close_p))
+    cursor = db.cursor()
+    for a,b,c,d,e,f,g,h,i,j in final_content:
+        cursor.execute('''INSERT INTO mainapp_predictdata_'''+symbol.lower()+''' (price_date, open_price, close_price, high_price,low_price,volume,adj_close_price,sentiment,weighted_close_price,adj_weighted_close_price) VALUES('''+str(a)+''','''+b+''','''+c+''','''+d+''','''+e+''','''+f+''','''+g+''','''+h+''','''+i+''','''+j+''')''')
+    db.commit()
+    return predict(request,symbol)
     
