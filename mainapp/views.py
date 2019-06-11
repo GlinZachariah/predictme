@@ -140,22 +140,21 @@ def predict(request,symbol):
     prices=df['close_price'].values
     arima = open('arima.txt','r')
     arima_data =arima.read()
-    print(arima_data)
     lstm = open('lstm.txt','r')
     lstm_data= lstm.read()
-    print(lstm_data)
     last_date= dates[8]
-    
-    # last_date += newdatetime.timedelta(days=1)
-    
+    last_date=last_date.astype('M8[D]').astype('O')
+    last_date += newdatetime.timedelta(days=1)
+    dates=list(dates)
+    dates.append(last_date)
     print(df)
     context = {
         'symbol' : symbol,
         'temp':df,
-        # 'change': change,
-        # 'last_price': last_price,
-        # 'per':per,
-        # 'close_date':close_date,
+        'dates': dates,
+        'arima': arima_data,
+        'lstm':lstm,
+        'prices':prices,
     }
     return HttpResponse(template.render(context, request))
 
@@ -187,8 +186,15 @@ def twitter(request,symbol):
 
 def news(request,symbol):
     template = loader.get_template('news.html')
+    generateWeighted(request,symbol)
     context = {
         'test_message' : 'working',
         'symbol' : symbol,
     }
     return HttpResponse(template.render(context, request))
+
+def generateWeighted(request,symbol):
+    cnx = sqlite3.connect('db.sqlite3')
+    cond_df = pd.read_sql_query("SELECT * FROM mainapp_predictdata_"+symbol.lower()+" ORDER by price_date DESC LIMIT 1", cnx)
+    cond_date=cond_df['price_date'][0] 
+    stock_df = pd.read_sql_query("SELECT * FROM mainapp_"+symbol.lower()+" WHERE price_date> "+cond_date, cnx)
