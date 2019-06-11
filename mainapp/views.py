@@ -10,6 +10,8 @@ from modules.update_data import upd
 from modules.retrieve_indicator import indicator
 from modules.finalfn import gen_weight
 from modules.update_db_tweet import updateTweet
+from modules.newsfetch import gen_news
+
 from datetime import date, datetime
 import datetime as newdatetime
 import json
@@ -230,9 +232,17 @@ def twitter(request,symbol):
 
 def news(request,symbol):
     template = loader.get_template('news.html')
+    cnx = sqlite3.connect('db.sqlite3')
+    df = pd.read_sql_query("SELECT price_date FROM mainapp_"+symbol.lower()+" ORDER by price_date DESC LIMIT 1", cnx)
+    cond_date=df['price_date'][0] 
+    df = gen_news(symbol,str(cond_date))
+    nws =list(df['news'].values)
+    nws_dates =list(df['news_date'].values)
+    final_items= list(zip(nws_dates,nws))
     context = {
         'test_message' : 'working',
         'symbol' : symbol,
+        'final_items':final_items,
     }
     return HttpResponse(template.render(context, request))
 

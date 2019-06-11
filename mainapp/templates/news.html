@@ -1,7 +1,7 @@
 {% extends 'index.html' %}
 
 {% block content %}
-
+{% load static %}
 <div class="doc">
 <div class="menu">
 	<ul>
@@ -13,7 +13,7 @@
 	</ul>
 </div>
 <div class= "visual">
-	<div style="margin-bottom: 50px; width: 95%;"><span style="float: right;"><a href="" class="update">Update</a></span></div>
+	
 	<div class="graph_title">
 	<style>
 		table,td{
@@ -27,8 +27,19 @@
 
 	<table>
 		<tr class='twt'>
-			<td><b>TWEET TEXT</b></td><td><b>DATE</b></td><td><b>FOLLOWER COUNT</b></td>
+			<td><b>DATE</b></td><td><b>NEWS</b></td>
 		</tr>
+     {% for i,j in final_items %}
+		<tr class='twt'>
+			<td>{{i}}</td>
+			<td>
+				<div style="font-size: 20px; font-family: Veranda;">
+					<img src="{% static "images/news.png" %}" alt=""> 
+					{{j}}
+				</div>
+			</td>
+		</tr>
+     {% endfor %}
  	</table>
  	<div style="height: 30px; width: 100%;"></div>
   </div>
