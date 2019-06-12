@@ -154,7 +154,8 @@ def predict(request,symbol):
     last_date=last_date.astype('M8[D]').astype('O')
     last_date += newdatetime.timedelta(days=1)
     dates =list(map(lambda x:x.astype('M8[D]').astype('O'),dates))
-    val =list(map(lambda x:x.strftime("%Y-%m-%d"),dates))    
+    val =list(map(lambda x:x.strftime("%Y-%m-%d"),dates)) 
+    print(val)   
     dates=list(dates)
     dates.append(last_date)
     
@@ -253,7 +254,9 @@ def generateWeighted(request,symbol):
     stock_df = pd.read_sql_query("SELECT * FROM mainapp_"+symbol.lower()+" WHERE price_date> '"+cond_date+"'", cnx)
     df = gen_weight(cond_date,symbol,stock_df)
     # we = gen_weight(cond_date,symbol,stock_df)
-    twdate =list(df['price_date'])
+    dates =df['price_date'].values
+    tdate =list(map(lambda x:x.astype('M8[D]').astype('O'),dates))
+    twdate =list(map(lambda x:x.strftime("%Y-%m-%d"),tdate))  
     open_p =list(df['open_price'])
     low_p =list(df['low_price'])
     close_p=list(df['close_price'])
@@ -262,13 +265,16 @@ def generateWeighted(request,symbol):
     vol =list(df['volume'])
     senti =list(df['sentiment'])
     w_close_p =list(df['weighted_close_price'])
-    adj_w_close_p = list(df['weighted_adj_close_price'])
+    adj_w_close_p = list(df['weight_adj_close_price'])
 
     final_content= list(zip(twdate,open_p,close_p,high_p,low_p,vol,adj_close_p,senti,w_close_p,adj_w_close_p))
-    cursor = db.cursor()
+    cursor = cnx.cursor()
     for a,b,c,d,e,f,g,h,i,j in final_content:
-        cursor.execute('''INSERT INTO mainapp_predictdata_'''+symbol.lower()+''' (price_date, open_price, close_price, high_price,low_price,volume,adj_close_price,sentiment,weighted_close_price,weighted_adj_close_price) VALUES('''+str(a)+''','''+b+''','''+c+''','''+d+''','''+e+''','''+f+''','''+g+''','''+h+''','''+i+''','''+j+''')''')
-    db.commit()
+        new_f=f.split(',')
+        f=int(''.join(new_f))
+        smnt ='''INSERT INTO mainapp_predictdata_'''+symbol.lower()+''' (price_date, open_price, close_price, high_price,low_price,volume,adj_close_price,sentiment,weighted_close_price,weighted_adj_close_price) VALUES("'''+str(a)+'''",'''+str(b)+''','''+str(c)+''','''+str(d)+''','''+str(e)+''','''+str(f)+''','''+str(g)+''','''+str(h)+''','''+str(i)+''','''+str(j)+''')'''
+        cursor.execute(smnt)
+    cnx.commit()
     return predict(request,symbol)
     
 def generateCSV(request,symbol):
